@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import CreateBlog from './components/CreateBlog'
+import Message from './components/Message'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -13,6 +14,30 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [infoMessage, setInfoMessage] = useState(null)
+
+  const messageStyle = {
+    borderRadius: 5,
+    padding: 8,
+    marginTop: 16,
+    marginBottom: 16,
+    width: "max-content",
+    fontSize: 20
+  }
+
+  const infoMessageStyle = {
+    ...messageStyle,
+    border: "2px solid #29A33B",
+    color: "#29A33B"
+  }
+
+  const errorMessageStyle = {
+    ...messageStyle,
+    border: "2px solid #A32929",
+    color: "#A32929"
+  }
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -31,7 +56,7 @@ const App = () => {
 
   const handleLoginSubmit = async (event) => {
     event.preventDefault()
-
+    console.log('handleLoginSubmit start')
     try {
       const user = await loginService.login({username, password})
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
@@ -39,8 +64,12 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setInfoMessage('Successfully logged in')
+      setTimeout(() => setInfoMessage(null), 3000)
     } catch(error) {
       console.log('error: ', error)
+      setErrorMessage('The username or password you entered was incorrect')
+      setTimeout(() => setErrorMessage(null), 5000)
     }
   }
 
@@ -48,6 +77,8 @@ const App = () => {
     window.localStorage.clear()
     setUser(null)
     blogService.setToken(null)
+    setInfoMessage('Successfully logged out')
+    setTimeout(() => setInfoMessage(null), 3000)
   }
 
   const handleTitleChange = ({target}) => {
@@ -69,6 +100,8 @@ const App = () => {
     setTitle('')
     setAuthor('')
     setUrl('')
+    setInfoMessage(`The blog ${blog.title} by ${blog.author} was added`)
+    setTimeout(() => setInfoMessage(null), 3000)
   }
 
   return (
@@ -77,6 +110,8 @@ const App = () => {
     ? 
       <div>
         <h2>Login In To Application</h2>
+        {errorMessage && <Message message={errorMessage} style={errorMessageStyle}/>}
+        {infoMessage && <Message message={infoMessage} style={infoMessageStyle}/>}
         <form onSubmit={handleLoginSubmit}>
           <div>
             <label>
@@ -104,6 +139,8 @@ const App = () => {
     : 
       <div>
         <h2>Blogs</h2>
+        {errorMessage && <Message message={errorMessage} style={errorMessageStyle}/>}
+        {infoMessage && <Message message={infoMessage} style={infoMessageStyle}/>}
         <p>{user.name} logged in</p>
         <button onClick={handleLogout}>Logout</button>
         <hr />

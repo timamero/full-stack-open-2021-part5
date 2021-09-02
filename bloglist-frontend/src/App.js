@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import CreateBlog from './components/CreateBlog'
 import Message from './components/Message'
@@ -18,6 +18,8 @@ const App = () => {
 
   const [errorMessage, setErrorMessage] = useState(null)
   const [infoMessage, setInfoMessage] = useState(null)
+
+  const blogFormRef = useRef()
 
   // const [blogFormVisible, setBlogFormVisible] = useState(false)
 
@@ -106,6 +108,7 @@ const App = () => {
     setTitle('')
     setAuthor('')
     setUrl('')
+    blogFormRef.current.toggleVisibility()
     setInfoMessage(`The blog ${blog.title} by ${blog.author} was added`)
     setTimeout(() => setInfoMessage(null), 3000)
   }
@@ -150,7 +153,7 @@ const App = () => {
         <p>{user.name} logged in</p>
         <button onClick={handleLogout}>Logout</button>
         <hr />
-        <Togglable buttonLabel="Create New Blog">
+        <Togglable buttonLabel="Create New Blog" ref={blogFormRef}>
           <h2>Create New</h2>
           <CreateBlog 
             title={title}

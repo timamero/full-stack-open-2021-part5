@@ -18,6 +18,8 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [infoMessage, setInfoMessage] = useState(null)
 
+  const [blogFormVisible, setBlogFormVisible] = useState(false)
+
   const messageStyle = {
     borderRadius: 5,
     padding: 8,
@@ -38,6 +40,9 @@ const App = () => {
     border: "2px solid #A32929",
     color: "#A32929"
   }
+
+  const showBlogFormWhenVisible = blogFormVisible ? { display: '' } : { display: 'none'}
+  const hideBlogFormWhenVisible = blogFormVisible ? { display: 'none' } : { display: ''}
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -127,7 +132,7 @@ const App = () => {
             <label>
               Password
               <input
-                type="text"
+                type="password"
                 value={password}
                 onChange={({ target }) => setPassword(target.value)}
               />
@@ -144,16 +149,24 @@ const App = () => {
         <p>{user.name} logged in</p>
         <button onClick={handleLogout}>Logout</button>
         <hr />
-        <h2>Create New</h2>
-        <CreateBlog 
-          title={title}
-          author={author}
-          url={url}
-          handleCreateBlog={handleCreateBlog}
-          handleTitleChange={handleTitleChange}
-          handleAuthorChange={handleAuthorChange}
-          handleUrlChange={handleUrlChange}
-        />
+        <div>
+          <div style={showBlogFormWhenVisible}>
+            <h2>Create New</h2>
+            <CreateBlog 
+              title={title}
+              author={author}
+              url={url}
+              handleCreateBlog={handleCreateBlog}
+              handleTitleChange={handleTitleChange}
+              handleAuthorChange={handleAuthorChange}
+              handleUrlChange={handleUrlChange}
+            />
+            <button type="button" onClick={() => setBlogFormVisible(false)}>Cancel</button>
+          </div>
+          <div style={hideBlogFormWhenVisible}>
+            <button type="button" onClick={() => setBlogFormVisible(true)}>Create New Blog</button>
+          </div>
+        </div>
         <hr />
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import CreateBlog from './components/CreateBlog'
 import Message from './components/Message'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -18,7 +19,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null)
   const [infoMessage, setInfoMessage] = useState(null)
 
-  const [blogFormVisible, setBlogFormVisible] = useState(false)
+  // const [blogFormVisible, setBlogFormVisible] = useState(false)
 
   const messageStyle = {
     borderRadius: 5,
@@ -41,8 +42,8 @@ const App = () => {
     color: "#A32929"
   }
 
-  const showBlogFormWhenVisible = blogFormVisible ? { display: '' } : { display: 'none'}
-  const hideBlogFormWhenVisible = blogFormVisible ? { display: 'none' } : { display: ''}
+  // const showBlogFormWhenVisible = blogFormVisible ? { display: '' } : { display: 'none'}
+  // const hideBlogFormWhenVisible = blogFormVisible ? { display: 'none' } : { display: ''}
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -149,24 +150,18 @@ const App = () => {
         <p>{user.name} logged in</p>
         <button onClick={handleLogout}>Logout</button>
         <hr />
-        <div>
-          <div style={showBlogFormWhenVisible}>
-            <h2>Create New</h2>
-            <CreateBlog 
-              title={title}
-              author={author}
-              url={url}
-              handleCreateBlog={handleCreateBlog}
-              handleTitleChange={handleTitleChange}
+        <Togglable buttonLabel="Create New Blog">
+          <h2>Create New</h2>
+          <CreateBlog 
+            title={title}
+            author={author}
+            url={url}
+            handleCreateBlog={handleCreateBlog}
+            handleTitleChange={handleTitleChange}
               handleAuthorChange={handleAuthorChange}
-              handleUrlChange={handleUrlChange}
-            />
-            <button type="button" onClick={() => setBlogFormVisible(false)}>Cancel</button>
-          </div>
-          <div style={hideBlogFormWhenVisible}>
-            <button type="button" onClick={() => setBlogFormVisible(true)}>Create New Blog</button>
-          </div>
-        </div>
+            handleUrlChange={handleUrlChange}
+          />
+        </Togglable>
         <hr />
         {blogs.map(blog =>
           <Blog key={blog.id} blog={blog} />

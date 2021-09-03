@@ -38,9 +38,6 @@ const App = () => {
     color: "#A32929"
   }
 
-  // const showBlogFormWhenVisible = blogFormVisible ? { display: '' } : { display: 'none'}
-  // const hideBlogFormWhenVisible = blogFormVisible ? { display: 'none' } : { display: ''}
-
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -103,10 +100,21 @@ const App = () => {
       setTimeout(() => setInfoMessage(null), 3000)
     
     } catch (exception) {
-      setInfoMessage('Blog was not added')
-      setTimeout(() => setInfoMessage(null), 3000)
+      setErrorMessage('Blog was not added')
+      setTimeout(() => setErrorMessage(null), 3000)
     
     }  
+  }
+
+  const handleUpdateBlog = async (updatedBlog) => {
+    try {
+      await blogService.update(updatedBlog.id, updatedBlog)
+      setInfoMessage(`Like added to ${updatedBlog.title}`)
+      setTimeout(() => setInfoMessage(null), 3000)
+    } catch (exceptions) {
+      setErrorMessage('Like not added')
+      setTimeout(() => setErrorMessage(null), 3000)
+    }
   }
 
   return (
@@ -175,7 +183,11 @@ const App = () => {
         </Togglable>
         <hr />
         {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} />
+          <Blog 
+            key={blog.id} 
+            blog={blog} 
+            handleUpdateBlog={handleUpdateBlog}
+          />
         )}
       </div>   
     }

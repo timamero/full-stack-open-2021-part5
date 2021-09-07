@@ -109,12 +109,26 @@ const App = () => {
   const handleUpdateBlog = async (updatedBlog) => {
     try {
       await blogService.update(updatedBlog.id, updatedBlog)
-      setInfoMessage(`Like added to ${updatedBlog.title}`)
+      setInfoMessage(`Blog ${updatedBlog.title} was updated`)
       setTimeout(() => setInfoMessage(null), 3000)
     } catch (exceptions) {
-      setErrorMessage('Like not added')
+      setErrorMessage('Blog not updated')
       setTimeout(() => setErrorMessage(null), 3000)
     }
+  }
+
+  const handleDeleteBlog = async (id, title, author) => {
+    if (window.confirm(`Remove blog ${title} by ${author}?`)) {
+      try {
+        await blogService.deleteObj(id)
+        setBlogs(blogs.filter(blog => blog.id !== id))
+        setInfoMessage('Removed blog')
+        setTimeout(() => setInfoMessage(null), 3000)
+      } catch (exceptions) {
+        setErrorMessage('Blog not deleted')
+        setTimeout(() => setErrorMessage(null), 3000)
+      }
+    }  
   }
 
   // Sorted in descending order of number of likes
@@ -197,7 +211,9 @@ const App = () => {
           <Blog 
             key={blog.id} 
             blog={blog} 
+            userName={user.name}
             handleUpdateBlog={handleUpdateBlog}
+            handleDeleteBlog={handleDeleteBlog}
           />
         )}
       </div>   

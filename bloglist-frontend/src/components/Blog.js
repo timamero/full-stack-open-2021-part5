@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({blog, handleUpdateBlog}) => {
+const Blog = ({blog, userName, handleUpdateBlog, handleDeleteBlog}) => {
   const [likes, setLikes] = useState(blog.likes)
   const [detailsVisible, setDetailsVisible] = useState(false)
 
@@ -9,6 +9,15 @@ const Blog = ({blog, handleUpdateBlog}) => {
     borderRadius: '0.2rem',
     margin: '1rem 0',
     padding: '0.5rem'
+  }
+
+  const deleteButtonStyle = {
+    cursor: 'pointer',
+    borderRadius: '0.2rem',
+    backgroundColor: '#A30000',
+    color: '#FFF',
+    outline: 'none',
+    border: 'none'
   }
 
   const detailsStyle = detailsVisible ? { display: ''} : {display: 'none'}
@@ -25,6 +34,11 @@ const Blog = ({blog, handleUpdateBlog}) => {
     handleUpdateBlog(updatedBlog)
     setLikes(updatedLikes)
   }
+
+  const handleDeleteClick = () => {
+    handleDeleteBlog(blog.id, blog.title, blog.author)
+  }
+  
   
   return (
     <div style={blogStyle}>
@@ -39,6 +53,7 @@ const Blog = ({blog, handleUpdateBlog}) => {
           <button type="button" onClick={handleLikeClick}>Like</button>
         </div>
         <p>{blog.user.name}</p>
+        {blog.user.name === userName && <button style={deleteButtonStyle} type="button" onClick={handleDeleteClick}>Remove</button>}
       </div>
     </div>
 )}

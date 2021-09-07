@@ -1,14 +1,14 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const CreateBlog = ({handleCreateBlog}) => {
+const CreateBlog = ({ handleCreateBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
   const handleSubmit = (event) => {
     event.preventDefault()
-    handleCreateBlog({title, author, url})
+    handleCreateBlog({ title, author, url })
     setTitle('')
     setAuthor('')
     setUrl('')
@@ -22,7 +22,7 @@ const CreateBlog = ({handleCreateBlog}) => {
           <input
             type="text"
             value={title}
-            onChange={({target}) => setTitle(target.value)}
+            onChange={({ target }) => setTitle(target.value)}
           />
         </label>
       </div>
@@ -32,7 +32,7 @@ const CreateBlog = ({handleCreateBlog}) => {
           <input
             type="text"
             value={author}
-            onChange={({target}) => setAuthor(target.value)}
+            onChange={({ target }) => setAuthor(target.value)}
           />
         </label>
       </div>
@@ -42,7 +42,7 @@ const CreateBlog = ({handleCreateBlog}) => {
           <input
             type="text"
             value={url}
-            onChange={({target}) => setUrl(target.value)}
+            onChange={({ target }) => setUrl(target.value)}
           />
         </label>
       </div>

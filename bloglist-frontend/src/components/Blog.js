@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 
-const Blog = ({blog, userName, handleUpdateBlog, handleDeleteBlog}) => {
+const Blog = ({ blog, userName, handleUpdateBlog, handleDeleteBlog }) => {
   const [likes, setLikes] = useState(blog.likes)
   const [detailsVisible, setDetailsVisible] = useState(false)
 
@@ -21,7 +21,7 @@ const Blog = ({blog, userName, handleUpdateBlog, handleDeleteBlog}) => {
     border: 'none'
   }
 
-  const detailsStyle = detailsVisible ? { display: ''} : {display: 'none'}
+  const detailsStyle = detailsVisible ? { display: '' } : { display: 'none' }
   const buttonLabel = detailsVisible ? 'Hide' : 'View'
 
   const handleViewClick = () => {
@@ -30,8 +30,8 @@ const Blog = ({blog, userName, handleUpdateBlog, handleDeleteBlog}) => {
 
   const handleLikeClick = () => {
     const updatedLikes = likes + 1
-    const updatedBlog = {...blog, likes: updatedLikes}
-    
+    const updatedBlog = { ...blog, likes: updatedLikes }
+
     handleUpdateBlog(updatedBlog)
     setLikes(updatedLikes)
   }
@@ -39,8 +39,8 @@ const Blog = ({blog, userName, handleUpdateBlog, handleDeleteBlog}) => {
   const handleDeleteClick = () => {
     handleDeleteBlog(blog.id, blog.title, blog.author)
   }
-  
-  
+
+
   return (
     <div style={blogStyle}>
       <div>
@@ -57,7 +57,7 @@ const Blog = ({blog, userName, handleUpdateBlog, handleDeleteBlog}) => {
         {blog.user.name === userName && <button style={deleteButtonStyle} type="button" onClick={handleDeleteClick}>Remove</button>}
       </div>
     </div>
-)}
+  )}
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,

@@ -117,6 +117,17 @@ const App = () => {
     }
   }
 
+  // Sorted in descending order of number of likes
+  const blogsSortedByLikes = blogs.sort((a, b) => {
+    if (a.likes > b.likes) {
+      return -1
+    }
+    if (a.likes < b.likes) {
+      return 1
+    }
+    return 0
+  })
+
   return (
     <div>
     {!user
@@ -182,7 +193,7 @@ const App = () => {
           <CreateBlog handleCreateBlog={handleCreateBlog}/>
         </Togglable>
         <hr />
-        {blogs.map(blog =>
+        {blogsSortedByLikes.map(blog =>
           <Blog 
             key={blog.id} 
             blog={blog} 

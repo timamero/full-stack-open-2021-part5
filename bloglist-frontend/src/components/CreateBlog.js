@@ -20,6 +20,7 @@ const CreateBlog = ({ handleCreateBlog }) => {
         <label>
           Title
           <input
+            id="title"
             type="text"
             value={title}
             onChange={({ target }) => setTitle(target.value)}
@@ -30,6 +31,7 @@ const CreateBlog = ({ handleCreateBlog }) => {
         <label>
           Author
           <input
+            id="author"
             type="text"
             value={author}
             onChange={({ target }) => setAuthor(target.value)}
@@ -40,6 +42,7 @@ const CreateBlog = ({ handleCreateBlog }) => {
         <label>
           URL
           <input
+            id="url"
             type="text"
             value={url}
             onChange={({ target }) => setUrl(target.value)}

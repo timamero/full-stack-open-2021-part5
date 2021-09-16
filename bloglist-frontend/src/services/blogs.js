@@ -34,7 +34,7 @@ const deleteObj = async (id) => {
 }
 
 const blogService = {
-  getAll, 
+  getAll,
   create,
   update,
   deleteObj,

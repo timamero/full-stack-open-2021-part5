@@ -165,6 +165,7 @@ const App = () => {
               <label>
               Username
                 <input
+                  id="username"
                   type="text"
                   value={username}
                   onChange={({ target }) => setUsername(target.value)}
@@ -175,6 +176,7 @@ const App = () => {
               <label>
               Password
                 <input
+                  id="password"
                   type="password"
                   value={password}
                   onChange={({ target }) => setPassword(target.value)}
@@ -207,7 +209,7 @@ const App = () => {
             <CreateBlog handleCreateBlog={handleCreateBlog}/>
           </Togglable>
           <hr />
-          {blogsSortedByLikes.map(blog =>
+          {blogsSortedByLikes && blogsSortedByLikes.map(blog =>
             <Blog
               key={blog.id}
               blog={blog}

@@ -9,6 +9,13 @@ describe('Blog app', function() {
     }
     cy.request('POST', 'http://localhost:3001/api/users', user)
 
+    const otherUser = {
+      name: 'OtherUser',
+      username: 'otherUser',
+      password: 'othersecret'
+    }
+    cy.request('POST', 'http://localhost:3001/api/users', otherUser)
+
     cy.visit('http://localhost:3000')
   })
 
@@ -56,7 +63,7 @@ describe('Blog app', function() {
       cy.get('#blogs').contains('new title')
     })
 
-    describe('Several blogs exists', function() {
+    describe('Several blogs by same user exists', function() {
       beforeEach(function() {
         const blog1 = {
           title: 'test title 1',
@@ -100,7 +107,8 @@ describe('Blog app', function() {
 
         cy.visit('http://localhost:3000')
       })
-      it.only('User can like a blog', function() {
+
+      it('User can like a blog', function() {
         cy.get('#blogs').contains('test title 2')
           .contains('View')
           .click()
@@ -117,6 +125,36 @@ describe('Blog app', function() {
         cy.get('#blogs').contains('test title 2')
           .parent()
           .contains('likes: 1')
+      })
+
+      it('User who created blog can delete blog', function() {
+        cy.get('#blogs').contains('test title 2')
+          .contains('View')
+          .click()
+
+        cy.get('#blogs').contains('test title 2')
+          .parent()
+          .contains('Remove')
+          .click()
+
+        cy.get('#blogs').should('not.contain', 'test title 2')
+      })
+
+      it.only('User who did not create blog cannot delete blog', function() {
+        localStorage.removeItem('loggedInUser')
+        cy.request('POST', 'http://localhost:3001/api/login/', { username: 'otherUser', password: 'othersecret' })
+          .then(response => {
+            localStorage.setItem('loggedInUser', JSON.stringify(response.body))
+          })
+        cy.visit('http://localhost:3000')
+
+        cy.get('#blogs').contains('test title 2')
+          .contains('View')
+          .click()
+
+        cy.get('#blogs').contains('test title 2')
+          .parent()
+          .should('not.contain', 'Remove')
       })
     })
   })

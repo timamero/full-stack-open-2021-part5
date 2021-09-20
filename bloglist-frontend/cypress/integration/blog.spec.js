@@ -45,6 +45,7 @@ describe('Blog app', function() {
         })
       cy.visit('http://localhost:3000')
     })
+
     it('A blog can be created', function() {
       cy.contains('Create New Blog').click()
       cy.get('#title').type('new title')
@@ -52,7 +53,71 @@ describe('Blog app', function() {
       cy.get('#url').type('new@blog.com')
       cy.get('#create-blog-button').click()
 
-      cy.get('#blog-list').contains('new title')
+      cy.get('#blogs').contains('new title')
+    })
+
+    describe('Several blogs exists', function() {
+      beforeEach(function() {
+        const blog1 = {
+          title: 'test title 1',
+          author: 'test author',
+          url: 'test1@example.com'
+        }
+        const blog2 = {
+          title: 'test title 2',
+          author: 'test author',
+          url: 'test2@example.com'
+        }
+        const blog3 = {
+          title: 'test title 3',
+          author: 'test author',
+          url: 'test3@example.com'
+        }
+        cy.request({
+          url: 'http://localhost:3001/api/blogs',
+          method: 'POST',
+          body: blog1,
+          headers: {
+            'Authorization': `bearer ${JSON.parse(localStorage.getItem('loggedInUser')).token}`
+          }
+        })
+        cy.request({
+          url: 'http://localhost:3001/api/blogs',
+          method: 'POST',
+          body: blog2,
+          headers: {
+            'Authorization': `bearer ${JSON.parse(localStorage.getItem('loggedInUser')).token}`
+          }
+        })
+        cy.request({
+          url: 'http://localhost:3001/api/blogs',
+          method: 'POST',
+          body: blog3,
+          headers: {
+            'Authorization': `bearer ${JSON.parse(localStorage.getItem('loggedInUser')).token}`
+          }
+        })
+
+        cy.visit('http://localhost:3000')
+      })
+      it.only('User can like a blog', function() {
+        cy.get('#blogs').contains('test title 2')
+          .contains('View')
+          .click()
+
+        cy.get('#blogs').contains('test title 2')
+          .parent()
+          .contains('likes: 0')
+
+        cy.get('#blogs').contains('test title 2')
+          .parent()
+          .contains('Like')
+          .click()
+
+        cy.get('#blogs').contains('test title 2')
+          .parent()
+          .contains('likes: 1')
+      })
     })
   })
 })

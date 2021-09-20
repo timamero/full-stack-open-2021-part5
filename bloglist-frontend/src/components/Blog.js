@@ -42,7 +42,7 @@ const Blog = ({ blog, userName, handleUpdateBlog, handleDeleteBlog }) => {
 
 
   return (
-    <div id="blog-list" style={blogStyle}>
+    <div style={blogStyle}>
       <div className="visibleDiv">
         {blog.title} {blog.author} {' '}
         <button type="button" onClick={handleViewClick}>{buttonLabel}</button>

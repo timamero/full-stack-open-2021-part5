@@ -188,7 +188,7 @@ const App = () => {
           </form>
         </div>
         :
-        <div>
+        <div id="blogs">
           <h2>Blogs</h2>
           {errorMessage
           && <Message

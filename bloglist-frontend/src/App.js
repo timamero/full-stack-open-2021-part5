@@ -150,6 +150,7 @@ const App = () => {
           <h2>Login In To Application</h2>
           {errorMessage
           && <Message
+            className="error"
             message={errorMessage}
             style={errorMessageStyle}
           />
@@ -183,7 +184,7 @@ const App = () => {
                 />
               </label>
             </div>
-            <input type="submit" value="login" />
+            <input id="login-button" type="submit" value="login" />
           </form>
         </div>
         :
@@ -191,6 +192,7 @@ const App = () => {
           <h2>Blogs</h2>
           {errorMessage
           && <Message
+            className="error"
             message={errorMessage}
             style={errorMessageStyle}
           />

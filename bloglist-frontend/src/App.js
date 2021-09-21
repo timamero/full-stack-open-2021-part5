@@ -109,6 +109,9 @@ const App = () => {
   const handleUpdateBlog = async (updatedBlog) => {
     try {
       await blogService.update(updatedBlog.id, updatedBlog)
+      await blogService.getAll().then(blogs =>
+        setBlogs( blogs )
+      )
       setInfoMessage(`Blog ${updatedBlog.title} was updated`)
       setTimeout(() => setInfoMessage(null), 3000)
     } catch (exceptions) {

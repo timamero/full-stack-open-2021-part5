@@ -108,7 +108,7 @@ describe('Blog app', function() {
         cy.visit('http://localhost:3000')
       })
 
-      it('User can like a blog', function() {
+      it.only('User can like a blog', function() {
         cy.get('#blogs').contains('test title 2')
           .contains('View')
           .click()
@@ -140,7 +140,7 @@ describe('Blog app', function() {
         cy.get('#blogs').should('not.contain', 'test title 2')
       })
 
-      it.only('User who did not create blog cannot delete blog', function() {
+      it('User who did not create blog cannot delete blog', function() {
         localStorage.removeItem('loggedInUser')
         cy.request('POST', 'http://localhost:3001/api/login/', { username: 'otherUser', password: 'othersecret' })
           .then(response => {
@@ -155,6 +155,10 @@ describe('Blog app', function() {
         cy.get('#blogs').contains('test title 2')
           .parent()
           .should('not.contain', 'Remove')
+      })
+
+      it('blogs are ordered according to likes with most likes first', function() {
+
       })
     })
   })

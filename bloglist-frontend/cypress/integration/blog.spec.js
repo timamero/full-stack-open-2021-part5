@@ -46,11 +46,7 @@ describe('Blog app', function() {
 
   describe('When logged in', function() {
     beforeEach(function() {
-      cy.request('POST', 'http://localhost:3001/api/login/', { username: 'admin', password: 'adminsecret' })
-        .then(response => {
-          localStorage.setItem('loggedInUser', JSON.stringify(response.body))
-        })
-      cy.visit('http://localhost:3000')
+      cy.login({ username: 'admin', password: 'adminsecret' })
     })
 
     it('A blog can be created', function() {
@@ -65,50 +61,24 @@ describe('Blog app', function() {
 
     describe('Several blogs by same user exists', function() {
       beforeEach(function() {
-        const blog1 = {
+        cy.createBlog({
           title: 'test title 1',
           author: 'test author',
           url: 'test1@example.com'
-        }
-        const blog2 = {
+        })
+        cy.createBlog({
           title: 'test title 2',
           author: 'test author',
           url: 'test2@example.com'
-        }
-        const blog3 = {
+        })
+        cy.createBlog({
           title: 'test title 3',
           author: 'test author',
           url: 'test3@example.com'
-        }
-        cy.request({
-          url: 'http://localhost:3001/api/blogs',
-          method: 'POST',
-          body: blog1,
-          headers: {
-            'Authorization': `bearer ${JSON.parse(localStorage.getItem('loggedInUser')).token}`
-          }
         })
-        cy.request({
-          url: 'http://localhost:3001/api/blogs',
-          method: 'POST',
-          body: blog2,
-          headers: {
-            'Authorization': `bearer ${JSON.parse(localStorage.getItem('loggedInUser')).token}`
-          }
-        })
-        cy.request({
-          url: 'http://localhost:3001/api/blogs',
-          method: 'POST',
-          body: blog3,
-          headers: {
-            'Authorization': `bearer ${JSON.parse(localStorage.getItem('loggedInUser')).token}`
-          }
-        })
-
-        cy.visit('http://localhost:3000')
       })
 
-      it.only('User can like a blog', function() {
+      it('User can like a blog', function() {
         cy.get('#blogs').contains('test title 2')
           .contains('View')
           .click()
@@ -142,11 +112,7 @@ describe('Blog app', function() {
 
       it('User who did not create blog cannot delete blog', function() {
         localStorage.removeItem('loggedInUser')
-        cy.request('POST', 'http://localhost:3001/api/login/', { username: 'otherUser', password: 'othersecret' })
-          .then(response => {
-            localStorage.setItem('loggedInUser', JSON.stringify(response.body))
-          })
-        cy.visit('http://localhost:3000')
+        cy.login({ username: 'otherUser', password: 'othersecret' })
 
         cy.get('#blogs').contains('test title 2')
           .contains('View')
@@ -156,9 +122,81 @@ describe('Blog app', function() {
           .parent()
           .should('not.contain', 'Remove')
       })
+    })
+
+    describe('Several blogs by same user with different number of likes exists', function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: 'test title 1',
+          author: 'test author',
+          url: 'test1@example.com',
+          likes: 8
+        })
+        cy.createBlog({
+          title: 'test title 2',
+          author: 'test author',
+          url: 'test2@example.com',
+          likes: 12
+        })
+        cy.createBlog({
+          title: 'test title 3',
+          author: 'test author',
+          url: 'test3@example.com',
+          likes: 10
+        })
+      })
 
       it('blogs are ordered according to likes with most likes first', function() {
+        let sortedLikes = []
+        cy.get('.likes').then(likes => {
+          sortedLikes = likes.map((index, like) => {
+            return like.textContent
+          })
+          expect(sortedLikes.toArray()).to.deep.equal(['likes: 12', 'likes: 10', 'likes: 8'])
+        })
+      })
 
+      it('when user likes blogs the order of the blogs change to maintain the descending sort by likes', function() {
+        cy.get('#blogs').contains('test title 3')
+          .contains('View')
+          .click()
+
+        cy.get('#blogs').contains('test title 3')
+          .parent()
+          .contains('Like')
+          .click()
+
+        cy.get('#blogs').contains('test title 3')
+          .parent()
+          .contains('likes: 11')
+
+        cy.get('#blogs').contains('test title 3')
+          .parent()
+          .contains('Like')
+          .click()
+
+        cy.get('#blogs').contains('test title 3')
+          .parent()
+          .contains('likes: 12')
+
+        cy.get('#blogs').contains('test title 3')
+          .parent()
+          .contains('Like')
+          .click()
+
+        cy.get('#blogs').contains('test title 3')
+          .parent()
+          .contains('likes: 13')
+
+        cy.wait(1000)
+
+        let sortedLikes = []
+        cy.get('.likes').then(likes => {
+          sortedLikes = likes.map((index, like) => {
+            return like.textContent
+          })
+          expect(sortedLikes.toArray()).to.deep.equal(['likes: 13', 'likes: 12', 'likes: 8'])
+        })
       })
     })
   })

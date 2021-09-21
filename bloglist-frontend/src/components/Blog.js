@@ -42,7 +42,7 @@ const Blog = ({ blog, userName, handleUpdateBlog, handleDeleteBlog }) => {
 
 
   return (
-    <div style={blogStyle}>
+    <div className="blog" style={blogStyle}>
       <div className="visibleDiv">
         {blog.title} {blog.author} {' '}
         <button type="button" onClick={handleViewClick}>{buttonLabel}</button>
@@ -50,7 +50,7 @@ const Blog = ({ blog, userName, handleUpdateBlog, handleDeleteBlog }) => {
       <div style={detailsStyle} className="toggleableDiv">
         <p>{blog.url}</p>
         <div>
-          likes: {likes} {' '}
+          <span className="likes">likes: {likes}</span>{' '}
           <button type="button" onClick={handleLikeClick}>Like</button>
         </div>
         <p>{blog.user.name}</p>
